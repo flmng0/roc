@@ -51,14 +51,8 @@ procedure Encode.23 (Encode.98):
     ret Encode.98;
 
 procedure Encode.24 (Encode.99, Encode.107, Encode.101):
-    inc Encode.99;
     let Encode.111 : List U8 = CallByName Test.5 Encode.99 Encode.101 Encode.107;
     ret Encode.111;
-
-procedure Encode.24 (Encode.99, Encode.107, Encode.101):
-    inc Encode.99;
-    let Encode.121 : List U8 = CallByName TotallyNotJson.231 Encode.99 Encode.101 Encode.107;
-    ret Encode.121;
 
 procedure Encode.24 (Encode.99, Encode.107, Encode.101):
     let Encode.113 : List U8 = CallByName TotallyNotJson.231 Encode.99 Encode.101 Encode.107;
@@ -77,6 +71,10 @@ procedure Encode.24 (Encode.99, Encode.107, Encode.101):
     
 
 procedure Encode.24 (Encode.99, Encode.107, Encode.101):
+    let Encode.121 : List U8 = CallByName TotallyNotJson.231 Encode.99 Encode.101 Encode.107;
+    ret Encode.121;
+
+procedure Encode.24 (Encode.99, Encode.107, Encode.101):
     let Encode.125 : Str = "a Lambda Set is empty. Most likely there is a type error in your program.";
     Crash Encode.125
 
@@ -84,7 +82,6 @@ procedure Encode.26 (Encode.105, Encode.106):
     let Encode.109 : List U8 = Array [];
     let Encode.110 : {{}, {}} = CallByName Test.2 Encode.105;
     let Encode.108 : List U8 = CallByName Encode.24 Encode.109 Encode.110 Encode.106;
-    dec Encode.109;
     ret Encode.108;
 
 procedure List.18 (List.160, List.161, List.162):
@@ -319,7 +316,6 @@ procedure TotallyNotJson.233 (TotallyNotJson.978, TotallyNotJson.239):
     let TotallyNotJson.238 : U64 = StructAtIndex 1 TotallyNotJson.978;
     let TotallyNotJson.997 : {} = Struct {};
     let TotallyNotJson.240 : List U8 = CallByName Encode.24 TotallyNotJson.237 TotallyNotJson.239 TotallyNotJson.997;
-    dec TotallyNotJson.237;
     joinpoint TotallyNotJson.992 TotallyNotJson.241:
         let TotallyNotJson.990 : U64 = 1i64;
         let TotallyNotJson.989 : U64 = CallByName Num.20 TotallyNotJson.238 TotallyNotJson.990;

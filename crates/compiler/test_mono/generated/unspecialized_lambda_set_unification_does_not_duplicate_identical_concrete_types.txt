@@ -27,7 +27,6 @@ procedure Encode.26 (Encode.105, Encode.106):
     let Encode.109 : List U8 = Array [];
     let Encode.110 : {Str, Str} = CallByName Test.2 Encode.105;
     let Encode.108 : List U8 = CallByName Encode.24 Encode.109 Encode.110 Encode.106;
-    dec Encode.109;
     ret Encode.108;
 
 procedure List.104 (List.488, List.489, List.490):
@@ -178,7 +177,6 @@ procedure List.92 (#Derived_gen.3, #Derived_gen.4, #Derived_gen.5, #Derived_gen.
             let List.609 : Str = CallByName List.66 List.163 List.166;
             inc List.609;
             let List.168 : {List U8, U64} = CallByName TotallyNotJson.233 List.164 List.609;
-            dec List.609;
             let List.608 : U64 = 1i64;
             let List.607 : U64 = CallByName Num.51 List.166 List.608;
             jump List.603 List.163 List.168 List.165 List.607 List.167;
@@ -241,7 +239,6 @@ procedure Test.3 ():
 
 procedure Test.5 (Test.6, Test.7, Test.4):
     joinpoint Test.20 Test.8:
-        inc Test.6;
         let Test.18 : List U8 = CallByName Encode.24 Test.6 Test.8 Test.7;
         ret Test.18;
     in
@@ -270,7 +267,6 @@ procedure Test.5 (Test.6, Test.7, Test.4):
         jump Test.20 Test.19;
 
 procedure TotallyNotJson.150 (TotallyNotJson.151, TotallyNotJson.1020, TotallyNotJson.149):
-    inc TotallyNotJson.149;
     let TotallyNotJson.1023 : List U8 = CallByName TotallyNotJson.26 TotallyNotJson.149;
     let TotallyNotJson.1022 : List U8 = CallByName List.8 TotallyNotJson.151 TotallyNotJson.1023;
     ret TotallyNotJson.1022;
