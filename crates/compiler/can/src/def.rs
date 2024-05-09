@@ -164,6 +164,11 @@ enum PendingValueDef<'a> {
         &'a Loc<ast::TypeAnnotation<'a>>,
         &'a Loc<ast::Expr<'a>>,
     ),
+    /// Module params from an import
+    ImportParams(
+        Loc<Pattern>,
+        ast::Collection<'a, Loc<AssignedField<'a, ast::Expr<'a>>>>,
+    ),
     /// Ingested file
     IngestedFile(
         Loc<Pattern>,
@@ -178,6 +183,7 @@ impl PendingValueDef<'_> {
             PendingValueDef::AnnotationOnly(_, loc_pattern, _) => loc_pattern,
             PendingValueDef::Body(loc_pattern, _) => loc_pattern,
             PendingValueDef::TypedBody(_, loc_pattern, _, _) => loc_pattern,
+            PendingValueDef::ImportParams(loc_pattern, _) => loc_pattern,
             PendingValueDef::IngestedFile(loc_pattern, _, _) => loc_pattern,
         }
     }
@@ -1093,8 +1099,21 @@ fn canonicalize_value_defs<'a>(
             PendingValue::ExpectFx(pending_expect) => {
                 pending_expect_fx.push(pending_expect);
             }
-            PendingValue::ModuleImport(introduced_import) => {
-                imports_introduced.push(introduced_import);
+            PendingValue::ModuleImport {
+                module_id,
+                region,
+                exposed_symbols,
+                params,
+            } => {
+                imports_introduced.push(IntroducedImport {
+                    module_id,
+                    region,
+                    exposed_symbols,
+                });
+
+                if let Some((loc_pattern, params)) = params {
+                    pending_value_defs.push(PendingValueDef::ImportParams(loc_pattern, params));
+                }
             }
             PendingValue::InvalidIngestedFile => { /* skip */ }
             PendingValue::ImportNameConflict => { /* skip */ }
@@ -2336,6 +2355,9 @@ fn canonicalize_pending_value_def<'a>(
                 None,
             )
         }
+        ImportParams(_, _) => {
+            todo!("agus: handle import params def")
+        }
         IngestedFile(loc_pattern, opt_loc_ann, path_literal) => {
             let relative_path =
                 if let ast::StrLiteral::PlainLine(ingested_path) = path_literal.value {
@@ -2877,7 +2899,15 @@ enum PendingValue<'a> {
     Dbg(PendingExpectOrDbg<'a>),
     Expect(PendingExpectOrDbg<'a>),
     ExpectFx(PendingExpectOrDbg<'a>),
-    ModuleImport(IntroducedImport),
+    ModuleImport {
+        module_id: ModuleId,
+        region: Region,
+        exposed_symbols: Vec<(Symbol, Region)>,
+        params: Option<(
+            Loc<Pattern>,
+            ast::Collection<'a, Loc<AssignedField<'a, ast::Expr<'a>>>>,
+        )>,
+    },
     SignatureDefMismatch,
     InvalidIngestedFile,
     ImportNameConflict,
@@ -3038,10 +3068,25 @@ fn to_pending_value_def<'a>(
                 None => module_name.clone(),
             };
 
+            let params = if let Some(params) = module_import.params  {
+                let name_str = name_with_alias.as_str();
+
+                // todo(agus): params specific loc
+                match scope.introduce_str(format!("#{name_str}").as_str(), region) {
+                    Ok(sym) => Some((sym, params)),
+                    Err(_) => {
+                        // Ignore conflict, it will be handled right after
+                        None
+                    }
+                }
+            } else {
+                None
+            };
+
             if let Err(existing_import) =
                 scope
                     .modules
-                    .insert(name_with_alias.clone(), module_id, region)
+                    .insert(name_with_alias.clone(), module_id, params.map(|(sym, _)| sym), region)
             {
                 env.problems.push(Problem::ImportNameConflict {
                     name: name_with_alias,
@@ -3052,7 +3097,7 @@ fn to_pending_value_def<'a>(
                 });
 
                 return PendingValue::ImportNameConflict;
-            }
+            };
 
             let exposed_names = module_import
                 .exposed
@@ -3107,11 +3152,18 @@ fn to_pending_value_def<'a>(
 
             }
 
-            PendingValue::ModuleImport(IntroducedImport {
+            let params =
+                params.map(|(sym, params)| {
+                    // todo(agus): params specific loc
+                    (Loc::at(region, Pattern::Identifier(sym)), params.params)
+                });
+
+            PendingValue::ModuleImport {
                 module_id,
                 region,
                 exposed_symbols,
-            })
+                params,
+            }
         }
         IngestedFileImport(ingested_file) => {
             let loc_name = ingested_file.name.item;
