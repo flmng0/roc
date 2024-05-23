@@ -299,7 +299,7 @@ pub struct ModuleHeader<'a> {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ModuleParams<'a> {
-    pub params: Collection<'a, Loc<Pattern<'a>>>,
+    pub pattern: Loc<Collection<'a, Loc<Pattern<'a>>>>,
     pub before_arrow: &'a [CommentOrNewline<'a>],
     pub after_arrow: &'a [CommentOrNewline<'a>],
 }
