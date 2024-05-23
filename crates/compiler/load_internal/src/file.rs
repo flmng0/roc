@@ -3534,6 +3534,7 @@ fn load_builtin_module_help<'a>(
                     name: header::ModuleName::new(name_stem),
                     exposes: unspace(arena, header.exposes.items),
                     generates_with: &[],
+                    opt_params: header.params,
                 },
                 module_comments: comments,
                 header_imports: header.interface_imports,
@@ -3823,6 +3824,7 @@ fn parse_header<'a>(
                 header_type: HeaderType::Module {
                     name: roc_parse::header::ModuleName::new(module_name),
                     exposes: unspace(arena, header.exposes.items),
+                    opt_params: header.params,
                 },
                 module_comments: comments,
                 header_imports: header.interface_imports,
