@@ -4611,6 +4611,7 @@ fn run_solve_solve(
         aliases,
         rigid_variables,
         abilities_store: pending_abilities,
+        params_pattern,
         ..
     } = module;
 
@@ -4658,6 +4659,7 @@ fn run_solve_solve(
             derived_module,
             #[cfg(debug_assertions)]
             checkmate,
+            params_pattern: params_pattern.map(|(_, _, pattern)| pattern.value),
         };
 
         let solve_output = roc_solve::module::run_solve(
