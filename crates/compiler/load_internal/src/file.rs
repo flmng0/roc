@@ -5066,6 +5066,7 @@ fn canonicalize_and_constrain<'a>(
             module_output.symbols_from_requires,
             &module_output.scope.abilities_store,
             &module_output.declarations,
+            &module_output.params_pattern,
             module_id,
         )
     };
