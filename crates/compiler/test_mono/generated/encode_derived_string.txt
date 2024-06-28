@@ -121,7 +121,6 @@ procedure List.92 (#Derived_gen.5, #Derived_gen.6, #Derived_gen.7, #Derived_gen.
             ret List.164;
     in
     inc #Derived_gen.5;
-    inc #Derived_gen.6;
     jump List.589 #Derived_gen.5 #Derived_gen.6 #Derived_gen.7 #Derived_gen.8 #Derived_gen.9;
 
 procedure Num.137 (#Attr.2, #Attr.3):
@@ -292,7 +291,6 @@ procedure TotallyNotJson.26 (TotallyNotJson.152):
         let TotallyNotJson.182 : List U8 = CallByName List.8 TotallyNotJson.1013 TotallyNotJson.179;
         let TotallyNotJson.996 : {} = Struct {};
         let TotallyNotJson.993 : List U8 = CallByName List.18 TotallyNotJson.181 TotallyNotJson.182 TotallyNotJson.996;
-        dec TotallyNotJson.182;
         dec TotallyNotJson.181;
         let TotallyNotJson.995 : U8 = 34i64;
         let TotallyNotJson.994 : List U8 = Array [TotallyNotJson.995];
