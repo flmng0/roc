@@ -237,6 +237,7 @@ jobs:
         run: |
           mv roc_nightly basic-cli-platform/.
           cd basic-cli-platform
+          ls .
           mkdir platform
           # move all files to platform dir
           find . -maxdepth 1 -type f -exec mv {} platform/ \;
