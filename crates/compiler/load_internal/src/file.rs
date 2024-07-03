@@ -3599,9 +3599,9 @@ fn load_module<'a>(
 
     macro_rules! load_builtins {
         ($($name:literal, $module_id:path)*) => {
-            match module_name.as_inner().as_str() {
+            match module_name.unqualified().map(|name| name.as_str()) {
             $(
-                $name => {
+                Some($name) => {
                     let (module_id, msg) = load_builtin_module(
                         arena,
                         module_ids,
@@ -3630,7 +3630,6 @@ fn load_module<'a>(
         "Decode", ModuleId::DECODE
         "Hash", ModuleId::HASH
         "Inspect", ModuleId::INSPECT
-        "TotallyNotJson", ModuleId::JSON
     }
 
     let (filename, opt_shorthand) = module_name_to_path(src_dir, &module_name, arc_shorthands);
